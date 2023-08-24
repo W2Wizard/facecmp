@@ -7,8 +7,8 @@ import os
 import sqlite3
 import face_recognition as fr
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify
 from cryptography.fernet import Fernet
+from flask import Flask, request, jsonify
 
 # Globals
 #==============================================================================
