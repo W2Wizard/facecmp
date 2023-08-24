@@ -13,11 +13,11 @@ from cryptography.fernet import Fernet
 # Globals
 #==============================================================================
 
+load_dotenv()
 app = Flask(__name__)
 db = sqlite3.connect('./db/db.sqlite' , check_same_thread=False)
-cursor = db.cursor()
-load_dotenv()
 cipher_suite = Fernet(os.getenv('ENCRYPTION_KEY'))
+cursor = db.cursor()
 
 cursor.execute('''
 	CREATE TABLE IF NOT EXISTS data (
@@ -53,7 +53,6 @@ def find_matches(login: str, face_encodings: list[float]) -> list[str]:
 # Routes
 #==============================================================================
 
-# DELETE Route to comply with GDPR
 @app.route('/api/delete', methods=['DELETE'])
 def yeet():
 	login = request.args['login']
@@ -67,7 +66,6 @@ def yeet():
 
 	return jsonify({'message': 'Data deleted successfully'}), 200
 
-# POST Route to add either find a match or add a new user
 @app.route('/api/recognize', methods=['POST'])
 def recognize():
 	try:
