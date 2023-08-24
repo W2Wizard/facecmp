@@ -14,7 +14,7 @@ from cryptography.fernet import Fernet
 #==============================================================================
 
 app = Flask(__name__)
-db = sqlite3.connect('faces.sqlite' , check_same_thread=False)
+db = sqlite3.connect('db.sqlite' , check_same_thread=False)
 cursor = db.cursor()
 load_dotenv()
 cipher_suite = Fernet(os.getenv('ENCRYPTION_KEY'))
@@ -34,7 +34,7 @@ def find_matches(login: str, face_encodings: list[float]) -> list[str]:
 
 	matches = []
 	for row in result:
-		row_encoding = cipher_suite.decrypt(row[2]).decode()
+		row_encoding = cipher_suite.decrypt(row[2]).decode("utf-8")
 		face_encoding = [float(value) for value in row_encoding.split(',')]
 		if fr.compare_faces([face_encoding], face_encodings)[0]:
 			matches.append(row[1])
