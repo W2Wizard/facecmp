@@ -163,4 +163,4 @@ cython_debug/
 *.jpeg
 *.jpg
 images/
-./db
+db
