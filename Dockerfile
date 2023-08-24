@@ -1,25 +1,25 @@
 # Use the official Python image as the base image
-FROM python:3.11.4
+FROM python:3.9
 
-# Set environment variables
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
-
-# Set the working directory inside the container
+# Set the working directory within the container
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y libglib2.0-0 libsm6 libxext6 libxrender-dev
+# Copy the requirements file into the container
+COPY requirements.txt .
 
-# Install Python dependencies
-#COPY requirements.txt /app/
-RUN pip3 install flask face-recognition
+# Install dependencies
+RUN apt-get update && apt-get install -y sqlite3
+RUN pip3 install --no-cache-dir gunicorn && \
+    pip3 install --no-cache-dir -r requirements.txt
 
-# Copy the application code into the container
-COPY ./app /app/
+# Copy the app source code into the container
+COPY . .
 
-# Expose the port that the Flask app will run on
-EXPOSE 5000
+# Create the database
+RUN sqlite3 db.sqlite < /app/schema.sql
 
-# Command to run the application
-CMD ["python", "main.py"]
+
+
+# Expose the port that Gunicorn will listen on
+EXPOSE 4242
+CMD ["gunicorn", "--bind", "0.0.0.0:4242", "app.server:app"]
