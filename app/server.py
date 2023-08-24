@@ -14,10 +14,19 @@ from cryptography.fernet import Fernet
 #==============================================================================
 
 app = Flask(__name__)
-db = sqlite3.connect('db.sqlite' , check_same_thread=False)
+db = sqlite3.connect('./db/db.sqlite' , check_same_thread=False)
 cursor = db.cursor()
 load_dotenv()
 cipher_suite = Fernet(os.getenv('ENCRYPTION_KEY'))
+
+cursor.execute('''
+	CREATE TABLE IF NOT EXISTS data (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		login TEXT NOT NULL,
+		data TEXT NOT NULL
+	)
+''')
+db.commit()
 
 # Functions
 #==============================================================================

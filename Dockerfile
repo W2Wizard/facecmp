@@ -15,10 +15,6 @@ RUN pip3 install --no-cache-dir gunicorn && \
 # Copy the app source code into the container
 COPY . .
 
-# Create the database
-RUN mkdir -p db
-RUN sqlite3 ./db/db.sqlite < ./app/schema.sql
-
 # Expose the port that Gunicorn will listen on
 EXPOSE 4242
 CMD ["gunicorn", "--bind", "0.0.0.0:4242", "app.server:app"]
