@@ -1,23 +1,25 @@
-# Use a base Python image
-FROM python:3.9
+# Use the official Python image as the base image
+FROM python:3.11.4
+
+# Set environment variables
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install system dependencies
+RUN apt-get update && apt-get install -y libglib2.0-0 libsm6 libxext6 libxrender-dev
 
-# Copy the Flask application code into the container
-COPY . .
+# Install Python dependencies
+#COPY requirements.txt /app/
+RUN pip3 install flask face-recognition
 
-# Expose the Flask application port
+# Copy the application code into the container
+COPY ./app /app/
+
+# Expose the port that the Flask app will run on
 EXPOSE 5000
 
-# Set the environment variables
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
-# Run the Flask application
-# TODO: Not for production
-CMD ["flask", "run"]
+# Command to run the application
+CMD ["python", "main.py"]

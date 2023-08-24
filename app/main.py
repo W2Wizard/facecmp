@@ -16,7 +16,7 @@ known_face_names = [
     "Unknown",
 ]
 
-@app.route('/compare_faces', methods=['POST'])
+@app.route('/match', methods=['POST'])
 def compare_faces():
     file = request.files['image']
 
